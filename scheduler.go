@@ -12,11 +12,20 @@ type Task interface {
 
 // Scheduler schedules the task periodically. Scheduler can be restarted once stopped.
 type Scheduler struct {
-	pollingInterval time.Duration
-	chStop          chan bool
-	mutex           sync.Mutex
-	started         bool
-	task            Task
+	interval time.Duration
+	chStop   chan bool
+	mutex    sync.Mutex
+	started  bool
+	task     Task
+}
+
+// NewScheduler creates an instance of scheduler for the given task and pollingInterval
+func NewScheduler(task Task, interval time.Duration) *Scheduler {
+	return &Scheduler{
+		interval: interval,
+		chStop:   make(chan bool),
+		task:     task,
+	}
 }
 
 // Start starts the task scheduling, it does nothing if scheduler is already started.
@@ -40,14 +49,14 @@ func (s *Scheduler) Stop() {
 }
 
 func (s *Scheduler) poll() {
-	ticker := time.NewTicker(s.pollingInterval)
+	ticker := time.NewTicker(s.interval)
 	defer ticker.Stop()
 
 	for {
 		select {
-		case <- ticker.C:
+		case <-ticker.C:
 			s.task.Run()
-		case <- s.chStop:
+		case <-s.chStop:
 			return
 		}
 	}

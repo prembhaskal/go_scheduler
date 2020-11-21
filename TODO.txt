@@ -1,0 +1,5 @@
+> Add test for race-detection
+
+> Add test to check start stop
+
+> Add scheduler/method which can start task immediately instead of waiting for 1 period
