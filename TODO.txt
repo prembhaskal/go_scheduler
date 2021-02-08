@@ -1,3 +1,5 @@
+> add precheck , interval > 0 else ticker will panic.
+
 > Add test for race-detection
 
 > Add test to check start stop
