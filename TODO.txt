@@ -1,3 +1,5 @@
+> write a mutex free version, using just channel.
+
 > add precheck , interval > 0 else ticker will panic.
 
 > Add test for race-detection
