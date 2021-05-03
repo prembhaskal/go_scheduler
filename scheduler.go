@@ -1,16 +1,11 @@
-package scheduler
+package goscheduler
 
 import (
 	"sync"
 	"time"
 )
 
-// Task is the job to be scheduled
-type Task interface {
-	Run()
-}
-
-// Scheduler schedules the task periodically. Scheduler can be restarted once stopped.
+// Scheduler schedules the task periodically. Scheduler can be restarted once stopped
 type Scheduler struct {
 	interval time.Duration
 	chStop   chan bool

@@ -2,7 +2,7 @@
 yet another scheduler library in go
 
 ## Scheduler
-type `scheduler.Scheduler` can schedule a given `scheduler.Task` periodically. In addition scheduler can be restarted once it is stopped, which is useful in some scenarios.  
+type `goscheduler.Scheduler` can schedule a given `goscheduler.Task` periodically. In addition scheduler can be restarted once it is stopped, which is useful in some scenarios.  
 API is as follows:  
 `NewScheduler()` to create the scheduler instance  
 `Start()` to start the scheduler  
