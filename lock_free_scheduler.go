@@ -20,7 +20,7 @@ func NewLockFreeScheduler(task Task, interval time.Duration) *LockFreeScheduler 
 		chStop:   make(chan bool, 1),
 		task:     task,
 	}
-	s.startRoutine()
+	go s.startRoutine()
 	return s
 }
 
