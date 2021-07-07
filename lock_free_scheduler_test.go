@@ -12,12 +12,48 @@ func TestLockFreeSchedulerNormalSchedules(t *testing.T) {
 	lockTask := &mockLockTask{m: ch}
 	lfs := NewLockFreeScheduler(lockTask, time.Millisecond*100)
 	lfs.Start()
-	runSuccess := waitForTask(2 * time.Second, 5, ch)
+	runSuccess := waitForTask(2*time.Second, 5, ch)
 	assert.True(t, runSuccess, "lock scheduler run failed")
 
 	lfs.Stop()
-	didRun := waitForTask(1 * time.Second, 1, ch)
+	didRun := waitForTask(1*time.Second, 1, ch)
 	assert.False(t, didRun, "after scheduler stop, should not run")
+}
+
+func TestMultipleStartsWork(t *testing.T) {
+	ch := make(chan int)
+	task := &mockLockTask{m: ch}
+	lfs := NewLockFreeScheduler(task, 100*time.Millisecond)
+	lfs.Start()
+	lfs.Start()
+	lfs.Start()
+
+	runSuccess := waitForTask(2*time.Second, 5, ch)
+	assert.True(t, runSuccess, "lock scheduler run failed")
+
+	lfs.Stop()
+	didRun := waitForTask(1*time.Second, 1, ch)
+	assert.False(t, didRun, "after scheduler stop, should not run")
+}
+
+func TestStartAfterStartWorks(t *testing.T) {
+	ch := make(chan int)
+	task := &mockLockTask{m: ch}
+	lfs := NewLockFreeScheduler(task, 100*time.Millisecond)
+	lfs.Start()
+
+	runSuccess := waitForTask(2*time.Second, 5, ch)
+	assert.True(t, runSuccess, "lock scheduler run failed")
+
+	lfs.Stop()
+	didRun := waitForTask(1*time.Second, 1, ch)
+	assert.False(t, didRun, "after scheduler stop, should not run")
+
+	lfs.Start()
+	runSuccess = waitForTask(2*time.Second, 5, ch)
+	assert.True(t, runSuccess, "lock scheduler run failed")
+
+	lfs.Stop()
 }
 
 func waitForTask(waitTime time.Duration, runCnt int, ch <-chan int) bool {
@@ -32,7 +68,6 @@ func waitForTask(waitTime time.Duration, runCnt int, ch <-chan int) bool {
 			}
 		}
 	}
-
 }
 
 type mockLockTask struct {
