@@ -8,6 +8,9 @@ API is as follows:
 `Start()` to start the scheduler  
 `Stop()` to stop the scheduler  
 
+## LockFreeScheduler
+`goscheduler.LockFreeScheduler`...
+
 ### test
 run the test using make command.
 ```
